@@ -103,7 +103,7 @@ std::unordered_set<int> Ransac(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud, int ma
 			y3= point.y;
 			d = fabs((a*x3+b*y3+c)/sqrt(a*a+b*b));
 			if (d<=distanceTol)
-				inliers.insert(index);
+				inliers.insert(i);
 			
 		}
 	if (inliers.size() > inliersResult.size())
@@ -119,7 +119,7 @@ std::unordered_set<int> Ransac(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud, int ma
 	// Return indicies of inliers from fitted line with most inliers
 	
 	
-	auto endTime = std::chrono::steady_clock::now();
+    auto endTime = std::chrono::steady_clock::now();
     auto elapsedTime = std::chrono::duration_cast<std::chrono::milliseconds>(endTime - startTime);
     std::cout << "Ransac " << elapsedTime.count() << " milliseconds" << std::endl;
 

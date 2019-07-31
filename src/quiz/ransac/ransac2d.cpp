@@ -71,7 +71,7 @@ std::unordered_set<int> Ransac(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud, int ma
 	
 	// TODO: Fill in this function
 	// Dor Max interations
-	while(maxIterations--)
+	/*while(maxIterations--)
 	{
 	// Randomly sample subset and fit line
 		float x1,y1,x2,y2;
@@ -108,7 +108,7 @@ std::unordered_set<int> Ransac(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud, int ma
 		}
 	if (inliers.size() > inliersResult.size())
 		inliersResult = inliers;
-	}   
+	}  */ 
 	
 
 	// Randomly sample subset and fit line
@@ -117,6 +117,52 @@ std::unordered_set<int> Ransac(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud, int ma
 	// If distance is smaller than threshold count it as inlier
 
 	// Return indicies of inliers from fitted line with most inliers
+	while(maxIterations--)
+	{
+		std::unordered_set<int> inliers;
+		while(inliers.size()<3)
+			inliers.insert(rand()%cloud->points.size());
+		auto itr = inliers.begin();
+		float x1 = cloud->points.at(*itr).x;
+		float y1 = cloud->points.at(*itr).y;
+		float z1 = cloud->points.at(*itr).z;
+		itr++;
+		float x2 = cloud->points.at(*itr).x;
+		float y2 = cloud->points.at(*itr).y;
+		float z2 = cloud->points.at(*itr).z;
+		itr++;
+		float x3 = cloud->points.at(*itr).x;
+		float y3 = cloud->points.at(*itr).y;
+		float z3 = cloud->points.at(*itr).z;
+
+		Vector3f v1(x2-x1, y2-y1, z2-z1);
+		Vector3f v2(x3-x1, y3-y1, z3-z1);
+		Vector3f v3 = v1.cross(v2);
+		float i= v3.coeff(0);
+		float j= v3.coeff(1);
+		float k= v3.coeff(2);
+		
+		
+		for(int index=0; index<cloud->points.size();index++)
+		{
+			if(inliers.count(index)>0)
+				continue;
+			
+			pcl::PointXYZ point = cloud->points[index];
+			float x4= point.x;
+			float y4= point.y;
+			float z4= point.z;
+
+			float dis = fabs((i*(x4-x1)+ j*(y4-y1)+k*(z4-z1))/sqrt(i*i+j*j+k*k));
+			if (dis <=distanceTol)
+				inliers.insert(index);
+			
+		}
+		if (inliers.size() > inliersResult.size())
+			inliersResult = inliers;
+
+	}
+	
 	
 	
     auto endTime = std::chrono::steady_clock::now();

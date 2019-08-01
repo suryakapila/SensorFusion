@@ -196,6 +196,7 @@ int main ()
 			cloudInliers->points.push_back(point);
 		else
 			cloudOutliers->points.push_back(point);
+		
 	}
 
 

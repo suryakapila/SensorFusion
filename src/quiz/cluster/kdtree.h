@@ -24,10 +24,30 @@ struct KdTree
 	KdTree()
 	: root(NULL)
 	{}
+	
+	void inserthelper(Node** node, uint depth, std::vector<float> point, int id)
+	{
+		if(*node == NULL)
+		{
+			*node = new Node(point, id);
+		}
 
+		uint cd = depth % 2;
+		if(point[cd]< ((*node)->point[cd]))
+		{
+			inserthelper(((*node)->left), depth+1, point, id);
+		}
+		else
+		{
+			inserthelper(((*node)->right), depth+1, point, id);
+		}
+		
+	}
+	
 	void insert(std::vector<float> point, int id)
 	{
 		// TODO: Fill in this function to insert a new point into the tree
+		inserthelper(&root, 0, point, id);
 		// the function should create a new node and place correctly with in the root 
 
 	}

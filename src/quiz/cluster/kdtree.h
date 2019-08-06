@@ -33,13 +33,14 @@ struct KdTree
 		}
 
 		uint cd = depth % 2;
+		
 		if(point[cd]< ((*node)->point[cd]))
 		{
-			inserthelper(((*node)->left), depth+1, point, id);
+			inserthelper((&(*node)->left), depth+1, point, id);
 		}
 		else
 		{
-			inserthelper(((*node)->right), depth+1, point, id);
+			inserthelper((&(*node)->right), depth+1, point, id);
 		}
 		
 	}

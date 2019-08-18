@@ -18,7 +18,11 @@
 #include <ctime>
 #include <chrono>
 #include "render/box.h"
+#include<unordered_set>
+#include<Eigen/Dense>
+//#include "cluster.h"
 
+//#include "/home/workspace/SFND_Lidar_Obstacle_Detection/src/KdTree.h"
 template<typename PointT>
 class ProcessPointClouds {
 public:

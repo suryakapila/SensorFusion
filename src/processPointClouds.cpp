@@ -103,6 +103,7 @@ template<typename PointT>
 std::pair<typename pcl::PointCloud<PointT>::Ptr, typename pcl::PointCloud<PointT>::Ptr> ProcessPointClouds<PointT>::SegmentPlane(typename pcl::PointCloud<PointT>::Ptr cloud, int maxIterations, float distanceThreshold)
 {
     // Time segmentation process
+<<<<<<< HEAD
   
     std::unordered_set<int> inlierResult;
     
@@ -192,6 +193,11 @@ std::pair<typename pcl::PointCloud<PointT>::Ptr, typename pcl::PointCloud<PointT
     {
        std::cerr<<"could not estimate a planar segment for the given dataset"<<std::endl;
 	}
+=======
+    auto startTime = std::chrono::steady_clock::now();
+	pcl::PointIndices::Ptr inliers;
+    // TODO:: Fill in this function to find inliers for the cloud.
+>>>>>>> ede58ab5e5ef383fa3276c411b45cae0f6aa7dd8
 
     auto endTime = std::chrono::steady_clock::now();
     auto elapsedTime = std::chrono::duration_cast<std::chrono::milliseconds>(endTime - startTime);

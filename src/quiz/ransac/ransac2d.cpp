@@ -3,6 +3,7 @@
 
 #include "../../render/render.h"
 #include <unordered_set>
+<<<<<<< HEAD
 #include<chrono>
 #include "../../processPointClouds.h"
 // using templates for processPointClouds so also include .cpp to help linker
@@ -11,6 +12,11 @@
 #include<iostream>
 
 using namespace Eigen;
+=======
+#include "../../processPointClouds.h"
+// using templates for processPointClouds so also include .cpp to help linker
+#include "../../processPointClouds.cpp"
+>>>>>>> ede58ab5e5ef383fa3276c411b45cae0f6aa7dd8
 
 pcl::PointCloud<pcl::PointXYZ>::Ptr CreateData()
 {
@@ -168,7 +174,10 @@ std::unordered_set<int> Ransac(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud, int ma
     auto elapsedTime = std::chrono::duration_cast<std::chrono::milliseconds>(endTime - startTime);
 	std::cout << "Ransac " << elapsedTime.count() << " milliseconds" << std::endl;
 	
+<<<<<<< HEAD
 	
+=======
+>>>>>>> ede58ab5e5ef383fa3276c411b45cae0f6aa7dd8
 	return inliersResult;
 
 }
@@ -180,7 +189,11 @@ int main ()
 	pcl::visualization::PCLVisualizer::Ptr viewer = initScene();
 
 	// Create data
+<<<<<<< HEAD
 	pcl::PointCloud<pcl::PointXYZ>::Ptr cloud = CreateData3D();
+=======
+	pcl::PointCloud<pcl::PointXYZ>::Ptr cloud = CreateData();
+>>>>>>> ede58ab5e5ef383fa3276c411b45cae0f6aa7dd8
 	
 
 	// TODO: Change the max iteration and distance tolerance arguments for Ransac function

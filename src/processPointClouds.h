@@ -20,23 +20,22 @@
 #include "render/box.h"
 #include<unordered_set>
 #include<Eigen/Dense>
-//#include "Cluster.h"
 #include<random>
 
-//#include "cluster.h"
 
-//#include "/home/workspace/SFND_Lidar_Obstacle_Detection/src/KdTree.h"
+
+
 // Structure to represent node of kd tree
 /*---------Idea of using pcl::PointXYZI point is inspired from github.com/studian/SFND_P1_Lidar_Obstacle_Detection.git*/
 struct Node
 {
-	//std::vector<typename PointT> point;
+	
 	pcl::PointXYZI point;
 	int id;
 	Node* left;
 	Node* right;
 
-	Node(/*std::vector<float> arr*/ pcl::PointXYZI arr, int setId)
+	Node( pcl::PointXYZI arr, int setId)
 	:	point(arr), id(setId), left(NULL), right(NULL)
 	{}
 };
@@ -58,8 +57,7 @@ struct KdTree
 		else
         {
 					int cd = depth % 3;
-					//bool x = (point[cd] < ((*node)->point[cd]));
-				
+									
 			
 					if(cd==0)
 					{
@@ -96,9 +94,7 @@ struct KdTree
 
 	void searchfunction(pcl::PointXYZI target,Node* node,int depth, float distanceTol, std::vector<int>& ids)
   {
-		//int x=0;
-		//int y=1;
-		//int z=2;
+		
 		int cd=depth % 3;
 		if (node!= NULL)
 		{

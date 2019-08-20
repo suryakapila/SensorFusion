@@ -21,6 +21,9 @@ void ProcessPointClouds<PointT>::numPoints(typename pcl::PointCloud<PointT>::Ptr
 }
 
 
+//--------------------------------------
+//edited and implemented by surya kapila
+//--------------------------------------
 template<typename PointT>
 typename pcl::PointCloud<PointT>::Ptr ProcessPointClouds<PointT>::FilterCloud(typename pcl::PointCloud<PointT>::Ptr cloud, float filterRes, Eigen::Vector4f minPoint, Eigen::Vector4f maxPoint)
 {
@@ -49,8 +52,8 @@ typename pcl::PointCloud<PointT>::Ptr ProcessPointClouds<PointT>::FilterCloud(ty
     //optional: crop the roof top points of ego car
     std::vector<int> indices;
     pcl::CropBox<PointT> roof(true);
-    roof.setMin(Eigen::Vector4f(-1.8, -1.9,-1.1,1));
-    roof.setMax(Eigen::Vector4f(2.7, 1.9, -0.2,1));
+    roof.setMin(Eigen::Vector4f(-2.5, -1.5,-2,1));
+    roof.setMax(Eigen::Vector4f(2.5,1.6, 2.1,1));
     roof. setInputCloud(filtercloud);
     roof.filter(indices);
 
@@ -98,6 +101,9 @@ std::pair<typename pcl::PointCloud<PointT>::Ptr, typename pcl::PointCloud<PointT
 
 
 
+//--------------------------------------
+//edited and implemented by surya kapila
+//--------------------------------------
 
 template<typename PointT>
 std::pair<typename pcl::PointCloud<PointT>::Ptr, typename pcl::PointCloud<PointT>::Ptr> ProcessPointClouds<PointT>::SegmentPlane(typename pcl::PointCloud<PointT>::Ptr cloud, int maxIterations, float distanceThreshold)
@@ -135,6 +141,7 @@ std::pair<typename pcl::PointCloud<PointT>::Ptr, typename pcl::PointCloud<PointT
 		float x3 = cloud->points.at(*itr).x;
 		float y3 = cloud->points.at(*itr).y;
 		float z3 = cloud->points.at(*itr).z;
+
 //-------------Idea from implementation is inspired from "http://eigen.tuxfamily.org/dox/group__matrixtypedefs.html#ga5ec9ce2d8adbcd6888f3fbf2e1c095a4"--------
 		
         Eigen::Vector3f v1(x2-x1, y2-y1, z2-z1);
@@ -155,7 +162,7 @@ std::pair<typename pcl::PointCloud<PointT>::Ptr, typename pcl::PointCloud<PointT
 			float y4= cloud->points[index].y;
 			float z4= cloud->points[index].z;
 
-			float dis = fabs((i*(x4-x1)+ j*(y4-y1)+k*(z4-z1))/sqrt(i*i+j*j+k*k));
+			float dis = std::fabs((i*(x4-x1)+ j*(y4-y1)+k*(z4-z1))/sqrt(i*i+j*j+k*k));
 			if (dis <=distanceThreshold)
 			{
                 in.insert(index);
@@ -174,20 +181,7 @@ std::pair<typename pcl::PointCloud<PointT>::Ptr, typename pcl::PointCloud<PointT
     }
     
 	
-    // TODO:: Fill in this function to find inliers for the cloud using PCL library
-/*pcl::SACSegmentation<PointT> seg;       //creating a Seg object
-    pcl::PointIndices::Ptr inliers {new pcl::PointIndices};
-    pcl::ModelCoefficients::Ptr coefficients {new pcl::ModelCoefficients};
 
-    seg.setOptimizeCoefficients(true);
-    seg.setModelType(pcl::SACMODEL_PLANE);
-    seg.setMethodType(pcl::SAC_RANSAC);
-    seg.setMaxIterations(maxIterations);
-    seg.setDistanceThreshold(distanceThreshold);
-
-    //Segment the largest planar component form the input cloud
-    seg.setInputCloud(cloud);
-    seg.segment(*inliers, *coefficients);*/
   
     if(inliers -> indices.size() == 0)
     {
@@ -202,6 +196,10 @@ std::pair<typename pcl::PointCloud<PointT>::Ptr, typename pcl::PointCloud<PointT
     return segResult;
 }
 
+
+//--------------------------------------
+//edited and implemented by surya kapila
+//--------------------------------------
 
 //Proximity function to determine the clustered points
 template <typename PointT>
@@ -220,12 +218,15 @@ void ProcessPointClouds<PointT>::proximity(int index, typename pcl::PointCloud<P
 		}
 	}
 }
-
+//--------------------------------------
+//edited and implemented by surya kapila
+//--------------------------------------
 template <typename PointT>
 std::vector<typename pcl::PointCloud<PointT>::Ptr> ProcessPointClouds<PointT>::euclideanCluster(typename pcl::PointCloud<PointT>::Ptr cloud, KdTree* tree, float distanceTol, int minSize, int maxSize)
 {
 
 	// TODO: Fill out this function to return list of indices for each cluster
+    // TODO:: Fill in the function to perform euclidean clustering to group detected obstacles
 
 	std::vector<typename pcl::PointCloud<PointT>::Ptr> clusters;
 	std::vector<bool> processed(cloud->points.size(),false);
@@ -279,6 +280,9 @@ std::vector<typename pcl::PointCloud<PointT>::Ptr> ProcessPointClouds<PointT>::C
     std::vector<typename pcl::PointCloud<PointT>::Ptr> clusters;
 
     
+//--------------------------------------
+//edited and implemented by surya kapila
+//--------------------------------------
   //Implemented Eucleadian clustering using PCL library
     typename pcl::search::KdTree<PointT>::Ptr tree(new pcl::search::KdTree<PointT>);
     tree->setInputCloud(cloud);
@@ -292,20 +296,7 @@ std::vector<typename pcl::PointCloud<PointT>::Ptr> ProcessPointClouds<PointT>::C
     ec.extract(cluster_indices);
    
 
-    // TODO:: Fill in the function to perform euclidean clustering to group detected obstacles
-    //creating the kd tree for the search method of extraction
-   /* KdTree *tree = new KdTree;
-    std::vector<std::vector<float>> points;
-    for(int i=0; i<cloud->points.size(); i++)
-    {
-        auto p = cloud->points[i];
-        std::vector<float> point = {p.x, p.y,p.z};
-        points.push_back(point);
-        tree->insert(points[i], i);
-    }
     
-  
-    //auto cluster_indices = euclideanCluster(points, tree, clusterTolerance);*/
     
     //for(std vector<pcl::PointIndices> const_iterator it = cluster_indices.begin(); it!= cluster_indices.end(); it++ )
    for (pcl::PointIndices getIndices: cluster_indices)

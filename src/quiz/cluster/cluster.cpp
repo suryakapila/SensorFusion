@@ -75,6 +75,9 @@ void render2DTree(Node* node, pcl::visualization::PCLVisualizer::Ptr& viewer, Bo
 
 }
 
+//--------------------------------------
+//edited and implemented by surya kapila
+//--------------------------------------
 //Proximity function to determine the clustered points
 void proximity(int index, const std::vector<std::vector<float>> points,std::vector<int>& cluster, std::vector<bool>& processed, KdTree* Tree, float distanceTol)
 {

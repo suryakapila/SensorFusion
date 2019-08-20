@@ -56,9 +56,9 @@ void simpleHighway(pcl::visualization::PCLVisualizer::Ptr& viewer)
     ProcessPointClouds<pcl::PointXYZ>* pointProcessor = new ProcessPointClouds<pcl::PointXYZ>();
     std::pair<pcl::PointCloud<pcl::PointXYZ>::Ptr, pcl::PointCloud<pcl::PointXYZ>::Ptr> segmentCloud = pointProcessor->SegmentPlane(inputcloud, 100, 0.2);
 
-  //  renderPointCloud(viewer, segmentCloud.first, "ObstCloud", Color(1,0,0) );
-	//renderPointCloud(viewer, segmentCloud.second, "planeCloud",Color(0,1,0) );
-   /*std::vector<pcl::PointCloud<pcl::PointXYZ>::Ptr> cloudClusters = pointProcessor->Clustering(segmentCloud.first, 1.0, 3, 30);
+    renderPointCloud(viewer, segmentCloud.first, "ObstCloud", Color(1,0,0) );
+	renderPointCloud(viewer, segmentCloud.second, "planeCloud",Color(0,1,0) );
+    std::vector<pcl::PointCloud<pcl::PointXYZ>::Ptr> cloudClusters = pointProcessor->Clustering(segmentCloud.first, 1.0, 3, 30);
 
     int clusterId = 0;
     std::vector<Color> colors = {Color(1,0,0), Color(1,1,0), Color(0,0,1)};
@@ -76,7 +76,7 @@ void simpleHighway(pcl::visualization::PCLVisualizer::Ptr& viewer)
             renderBox(viewer, box, clusterId);
         
         ++clusterId;
-    } */
+    } 
   
 }
 
@@ -86,18 +86,13 @@ void cityBlock(pcl::visualization::PCLVisualizer::Ptr& viewer, ProcessPointCloud
     //------------------------------
     //----open 3d viewer and display city block
     //---------------------------------
-    
+    // edited and implemented by surya kapila
     
     bool render_clusters = true;
     bool render_box = true;
    
 
-    //ProcessPointClouds<pcl::PointXYZI>* pointProcessorI = new ProcessPointClouds<pcl::PointXYZI>();
-    //pcl:: PointCloud<pcl::PointXYZI>::Ptr inputCloud= pointProcessorI->loadPcd("/home/workspace/SFND_Lidar_Obstacle_Detection/src/sensors/data/pcd/data_1/0000000000.pcd");
-    
-    //render pointcloud from the data file
-    //renderPointCloud(viewer, inputCloudI, "inputCloud");
-    
+      
     
     
     //experiment with filtered cloud for better picture and clear understanding

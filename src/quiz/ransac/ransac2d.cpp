@@ -3,7 +3,6 @@
 
 #include "../../render/render.h"
 #include <unordered_set>
-<<<<<<< HEAD
 #include<chrono>
 #include "../../processPointClouds.h"
 // using templates for processPointClouds so also include .cpp to help linker
@@ -12,11 +11,6 @@
 #include<iostream>
 
 using namespace Eigen;
-=======
-#include "../../processPointClouds.h"
-// using templates for processPointClouds so also include .cpp to help linker
-#include "../../processPointClouds.cpp"
->>>>>>> ede58ab5e5ef383fa3276c411b45cae0f6aa7dd8
 
 pcl::PointCloud<pcl::PointXYZ>::Ptr CreateData()
 {
@@ -71,6 +65,10 @@ pcl::visualization::PCLVisualizer::Ptr initScene()
   	viewer->addCoordinateSystem (1.0);
   	return viewer;
 }
+
+//--------------------------------------
+//edited and implemented by surya kapila
+//--------------------------------------
 
 std::unordered_set<int> Ransac(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud, int maxIterations, float distanceTol)
 {

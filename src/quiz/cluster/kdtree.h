@@ -24,6 +24,10 @@ struct KdTree
 	KdTree()
 	: root(NULL)
 	{}
+
+//--------------------------------------
+//edited and implemented by surya kapila
+//--------------------------------------
 	void inserthelper(Node** node, uint depth, std::vector<float> point, int id)
 	{
 		if(*node == NULL)

@@ -55,7 +55,6 @@ struct KdTree
 
 	}
 
-<<<<<<< HEAD
 	void searchfunction(std::vector<float> target,Node* node,int depth, float distanceTol, std::vector<int>& ids)
   {
 		int x=0;
@@ -87,8 +86,6 @@ struct KdTree
 		
   }
 
-=======
->>>>>>> ede58ab5e5ef383fa3276c411b45cae0f6aa7dd8
 	// return a list of point ids in the tree that are within distance of target
 	std::vector<int> search(std::vector<float> target, float distanceTol)
 	{

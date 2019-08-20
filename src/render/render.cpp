@@ -108,8 +108,4 @@ void renderBox(pcl::visualization::PCLVisualizer::Ptr& viewer, BoxQ box, int id,
     viewer->setShapeRenderingProperties(pcl::visualization::PCL_VISUALIZER_REPRESENTATION, pcl::visualization::PCL_VISUALIZER_REPRESENTATION_SURFACE, cubeFill); 
     viewer->setShapeRenderingProperties(pcl::visualization::PCL_VISUALIZER_COLOR, color.r, color.g, color.b, cubeFill);
     viewer->setShapeRenderingProperties(pcl::visualization::PCL_VISUALIZER_OPACITY, opacity*0.3, cubeFill);
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> ede58ab5e5ef383fa3276c411b45cae0f6aa7dd8

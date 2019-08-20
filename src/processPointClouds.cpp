@@ -2,6 +2,7 @@
 
 #include "processPointClouds.h"
 //#include "cluster.cpp"
+//#include "KdTree.h"
 
 
 //constructor:
@@ -103,7 +104,6 @@ template<typename PointT>
 std::pair<typename pcl::PointCloud<PointT>::Ptr, typename pcl::PointCloud<PointT>::Ptr> ProcessPointClouds<PointT>::SegmentPlane(typename pcl::PointCloud<PointT>::Ptr cloud, int maxIterations, float distanceThreshold)
 {
     // Time segmentation process
-<<<<<<< HEAD
   
     std::unordered_set<int> inlierResult;
     
@@ -136,7 +136,7 @@ std::pair<typename pcl::PointCloud<PointT>::Ptr, typename pcl::PointCloud<PointT
 		float x3 = cloud->points.at(*itr).x;
 		float y3 = cloud->points.at(*itr).y;
 		float z3 = cloud->points.at(*itr).z;
-
+//-------------Idea from implementation is inspired from "http://eigen.tuxfamily.org/dox/group__matrixtypedefs.html#ga5ec9ce2d8adbcd6888f3fbf2e1c095a4"--------
 		Eigen::Vector3f v1(x2-x1, y2-y1, z2-z1);
 		Eigen::Vector3f v2(x3-x1, y3-y1, z3-z1);
 		Eigen::Vector3f v3 = v1.cross(v2);
@@ -193,11 +193,6 @@ std::pair<typename pcl::PointCloud<PointT>::Ptr, typename pcl::PointCloud<PointT
     {
        std::cerr<<"could not estimate a planar segment for the given dataset"<<std::endl;
 	}
-=======
-    auto startTime = std::chrono::steady_clock::now();
-	pcl::PointIndices::Ptr inliers;
-    // TODO:: Fill in this function to find inliers for the cloud.
->>>>>>> ede58ab5e5ef383fa3276c411b45cae0f6aa7dd8
 
     auto endTime = std::chrono::steady_clock::now();
     auto elapsedTime = std::chrono::duration_cast<std::chrono::milliseconds>(endTime - startTime);
@@ -208,6 +203,69 @@ std::pair<typename pcl::PointCloud<PointT>::Ptr, typename pcl::PointCloud<PointT
 }
 
 
+//Proximity function to determine the clustered points
+template <typename PointT>
+void ProcessPointClouds<PointT>::proximity(int index, typename pcl::PointCloud<PointT>::Ptr cloud, std::vector<int>& cluster, std::vector<bool>& processed, KdTree* Tree, float distanceTol)
+{
+	processed[index] = true;    //mark point as processed
+	cluster.push_back(index);    //add point to the cluster
+	
+	std::vector<int> nearby = Tree->search(cloud->points[index], distanceTol); // finding nearby points using searchfunction
+
+	for(int i : nearby)             //iterate through all the points
+	{
+		if(processed[i]==false)     //if the point has not been processed
+		{
+			proximity(i, cloud, cluster, processed, Tree, distanceTol);  //repeat proximity function
+		}
+	}
+}
+
+template <typename PointT>
+std::vector<typename pcl::PointCloud<PointT>::Ptr> ProcessPointClouds<PointT>::euclideanCluster(typename pcl::PointCloud<PointT>::Ptr cloud, KdTree* tree, float distanceTol, int minSize, int maxSize)
+{
+
+	// TODO: Fill out this function to return list of indices for each cluster
+
+	std::vector<typename pcl::PointCloud<PointT>::Ptr> clusters;
+	std::vector<bool> processed(cloud->points.size(),false);
+
+	 
+	for(int index=0; index<cloud->points.size(); index++) //iterate through each point
+	{
+		if(processed[index])   //check if the point is not processed
+		{
+			
+			continue;
+		}
+
+		//create a cluster
+		std::vector<int> cluster;
+        typename pcl::PointCloud<PointT>::Ptr cloudClusters(new pcl::PointCloud<PointT>);
+		//call proximity function to determine the clustering points
+		proximity(index, cloud, cluster, processed, tree, distanceTol);
+
+        if(cluster.size()>=minSize && cluster.size()<=maxSize)
+        {
+            for(int p=0; p< cluster.size();p++)
+            {
+                cloudClusters->points.push_back(cloud->points[cluster[p]]);
+            }
+            cloudClusters->width = cloudClusters->points.size();
+            cloudClusters->height = 1;
+            cloudClusters->is_dense = true;
+
+            	//cluster add into clusters
+		    clusters.push_back(cloudClusters);
+        }
+	
+		
+		
+	}
+ 
+	return clusters;
+
+}
 
  
 template<typename PointT>
@@ -220,17 +278,6 @@ std::vector<typename pcl::PointCloud<PointT>::Ptr> ProcessPointClouds<PointT>::C
 
     std::vector<typename pcl::PointCloud<PointT>::Ptr> clusters;
 
-    // TODO:: Fill in the function to perform euclidean clustering to group detected obstacles
-    //creating the kd tree for the search method of extraction
-    //KdTree* tree = new KdTree;
-    /*std::vector<std::vector<float>> points;
-    for(int i=0; i<cloud->points.size(); i++)
-    {
-        auto p = cloud->points[i];
-        std::vector<float> point = {p.x, p.y,p.z};
-        points.push_back(point);
-        tree->insert(points[i], i);
-    }*/
     
   //Implemented Eucleadian clustering using PCL library
     typename pcl::search::KdTree<PointT>::Ptr tree(new pcl::search::KdTree<PointT>);
@@ -243,8 +290,22 @@ std::vector<typename pcl::PointCloud<PointT>::Ptr> ProcessPointClouds<PointT>::C
     ec.setSearchMethod(tree);
     ec.setInputCloud(cloud);
     ec.extract(cluster_indices);
+   
+
+    // TODO:: Fill in the function to perform euclidean clustering to group detected obstacles
+    //creating the kd tree for the search method of extraction
+   /* KdTree *tree = new KdTree;
+    std::vector<std::vector<float>> points;
+    for(int i=0; i<cloud->points.size(); i++)
+    {
+        auto p = cloud->points[i];
+        std::vector<float> point = {p.x, p.y,p.z};
+        points.push_back(point);
+        tree->insert(points[i], i);
+    }
     
-   // std::vector<std::vector<int>> cluster_indices = euclideanCluster(points, tree, clusterTolerance);
+  
+    //auto cluster_indices = euclideanCluster(points, tree, clusterTolerance);*/
     
     //for(std vector<pcl::PointIndices> const_iterator it = cluster_indices.begin(); it!= cluster_indices.end(); it++ )
    for (pcl::PointIndices getIndices: cluster_indices)
@@ -253,6 +314,7 @@ std::vector<typename pcl::PointCloud<PointT>::Ptr> ProcessPointClouds<PointT>::C
         typename pcl::PointCloud<PointT>::Ptr cloudClusters(new pcl::PointCloud<PointT>);
         //for(std::vector<int> pit = it->indices.begin(); pit !=it->indices.end(); ++pit)
         for(int index: getIndices.indices)
+        //for(int index: getIndices)
             cloudClusters->points.push_back(cloud->points.at(index));
         cloudClusters->width = cloudClusters->points.size();
         cloudClusters->height = 1;

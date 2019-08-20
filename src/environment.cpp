@@ -113,11 +113,8 @@ void cityBlock(pcl::visualization::PCLVisualizer::Ptr& viewer, ProcessPointCloud
 
     std::pair<pcl::PointCloud<pcl::PointXYZI>::Ptr, pcl::PointCloud<pcl::PointXYZI>::Ptr> segmentCloud = pointProcessorI->SegmentPlane(filtered_cloud, max_iterations, distanceTol);
     
-    
-    
-    
+     
 	
-
     //renderPointCloud(viewer, filtered_cloud, "filtered_cloud");
 
     //Implementation of Clustering
@@ -125,10 +122,13 @@ void cityBlock(pcl::visualization::PCLVisualizer::Ptr& viewer, ProcessPointCloud
     int minSize = 10;
     int maxSize = 600;
 
+    //creating the kd tree for the search method of extraction
     KdTree* tree = new KdTree;
+    
     for(int it =0;it<segmentCloud.first->points.size(); it++)
         tree->insert(segmentCloud.first->points[it], it);
 
+   
     //std::vector<pcl::PointCloud<pcl::PointXYZI>::Ptr> cloudClusters = pointProcessorI->Clustering(segmentCloud.first, clusterTol, minSize, maxSize);
     std::vector<pcl::PointCloud<pcl::PointXYZI>::Ptr> cloudClusters = pointProcessorI->euclideanCluster(segmentCloud.first, tree, clusterTol, minSize, maxSize);
 

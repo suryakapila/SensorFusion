@@ -1,8 +1,7 @@
 // PCL lib Functions for processing point clouds 
 
 #include "processPointClouds.h"
-//#include "cluster.cpp"
-//#include "KdTree.h"
+
 
 
 //constructor:
@@ -137,7 +136,8 @@ std::pair<typename pcl::PointCloud<PointT>::Ptr, typename pcl::PointCloud<PointT
 		float y3 = cloud->points.at(*itr).y;
 		float z3 = cloud->points.at(*itr).z;
 //-------------Idea from implementation is inspired from "http://eigen.tuxfamily.org/dox/group__matrixtypedefs.html#ga5ec9ce2d8adbcd6888f3fbf2e1c095a4"--------
-		Eigen::Vector3f v1(x2-x1, y2-y1, z2-z1);
+		
+        Eigen::Vector3f v1(x2-x1, y2-y1, z2-z1);
 		Eigen::Vector3f v2(x3-x1, y3-y1, z3-z1);
 		Eigen::Vector3f v3 = v1.cross(v2);
 		float i= v3.coeff(0);
